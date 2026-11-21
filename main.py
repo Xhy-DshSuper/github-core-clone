@@ -3835,6 +3835,9 @@ def main():
         except KeyboardInterrupt:
             pass
         return 0
+    # Serve on its own thread: the main thread registers and polls /done,
+    # and without this the socket listens but no request is ever answered.
+    threading.Thread(target=server.serve_forever, daemon=True).start()
     # register (first one wins; 200 or 409 both mean "an entry is registered")
     attempt = 0
     while True:
